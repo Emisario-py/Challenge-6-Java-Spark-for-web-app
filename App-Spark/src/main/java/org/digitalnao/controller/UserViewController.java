@@ -10,7 +10,7 @@ import java.util.List;
 
 import static spark.Spark.*;
 
-public class ViewController {
+public class UserViewController {
 
     // 🔹 Motor de plantillas Mustache
     private static final MustacheTemplateEngine templateEngine = new MustacheTemplateEngine();

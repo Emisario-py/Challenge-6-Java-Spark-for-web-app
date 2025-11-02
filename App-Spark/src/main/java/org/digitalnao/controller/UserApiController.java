@@ -5,7 +5,7 @@ import org.digitalnao.model.User;
 import com.google.gson.Gson;
 import static spark.Spark.*;
 
-public class ApiController {
+public class UserApiController {
     public static void initRoutes(UserDao dao) {
         Gson gson = new Gson();
 
