@@ -1,6 +1,7 @@
 package org.digitalnao;
 
 import org.digitalnao.controller.UserApiController;
+import org.digitalnao.controller.UserViewController;
 import org.digitalnao.dao.UserDao;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
@@ -16,7 +17,7 @@ public class Main {
         UserDao dao = jdbi.onDemand(UserDao.class);
         dao.createTable();
 
-
+        UserViewController.initRoutes(dao);
         UserApiController.initRoutes(dao);
 
         System.out.println("🚀 Server running on http://localhost:8080");
