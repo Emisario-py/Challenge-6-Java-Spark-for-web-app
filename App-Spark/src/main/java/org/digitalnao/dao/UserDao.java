@@ -12,7 +12,7 @@ import java.util.List;
 @RegisterBeanMapper(User.class)
 public interface UserDao {
 
-    @SqlUpdate("CREATE TABLE IF NOT EXISTS users (id IDENTITY PRIMARY KEY, name VARCHAR(100), email VARCHAR(100))")
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS users (id IDENTITY PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL)")
     void createTable();
 
     @SqlUpdate("INSERT INTO users (name, email) VALUES (:name, :email)")
