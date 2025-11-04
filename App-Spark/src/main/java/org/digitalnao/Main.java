@@ -1,6 +1,8 @@
 package org.digitalnao;
 
+import org.digitalnao.controller.ItemApiController;
 import org.digitalnao.controller.UserApiController;
+import org.digitalnao.dao.ItemDao;
 import org.digitalnao.dao.UserDao;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
@@ -13,11 +15,14 @@ public class Main {
         Jdbi jdbi = Jdbi.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "sa", "");
         jdbi.installPlugin(new SqlObjectPlugin());
 
-        UserDao dao = jdbi.onDemand(UserDao.class);
-        dao.createTable();
+        UserDao userDao = jdbi.onDemand(UserDao.class);
+        ItemDao itemDao = jdbi.onDemand(ItemDao.class);
 
+        userDao.createTable();
+        itemDao.createTable();
 
-        UserApiController.initRoutes(dao);
+        UserApiController.initRoutes(userDao);
+        ItemApiController.initRoutes(itemDao, userDao);
 
         System.out.println("🚀 Server running on http://localhost:8080");
         System.out.println("🔌 API REST: http://localhost:8080/api/users");
