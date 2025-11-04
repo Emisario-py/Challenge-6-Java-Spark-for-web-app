@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nuevo Usuario</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+        .form-header { text-align: center; margin-bottom: 30px; }
+        .form-header h1 { color: #333; font-size: 28px; margin-bottom: 10px; }
+        .form-header p { color: #666; font-size: 14px; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; color: #333; font-weight: 600; font-size: 14px; }
+        .required { color: #e74c3c; margin-left: 3px; }
+        input[type="text"], input[type="email"], textarea {
+            width: 100%; padding: 14px; border: 2px solid #e1e8ed;
+            border-radius: 8px; font-size: 15px; transition: all 0.3s; font-family: inherit;
+        }
+        input:focus, textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+        .form-actions { display: flex; gap: 12px; margin-top: 30px; }
+        .btn { padding: 14px 28px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;
+            text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+            transition: all 0.3s; flex: 1; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .btn-secondary { background-color: #f8f9fa; color: #666; border: 2px solid #e1e8ed; }
+        .btn-secondary:hover { background-color: #e9ecef; }
+        @media (max-width: 600px) {
+            .form-container { padding: 25px; }
+            .form-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <div class="form-header">
+        <h1>👤 Crear Nuevo Usuario</h1>
+        <p>Completa el formulario para registrar un nuevo usuario</p>
+    </div>
+
+    <form action="/users/create" method="post">
+        <div class="form-group">
+            <label for="name">Nombre Completo<span class="required">*</span></label>
+            <input type="text" id="name" name="name" placeholder="Juan Pérez" required minlength="2" maxlength="100">
+            <p class="help-text">Ingrese el nombre completo del usuario</p>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Correo Electrónico<span class="required">*</span></label>
+            <input type="email" id="email" name="email" placeholder="juan.perez@ejemplo.com" required maxlength="100">
+            <p class="help-text">Este correo será usado para notificaciones</p>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">✓ Crear Usuario</button>
+            <a href="/" class="btn btn-secondary">✕ Cancelar</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
