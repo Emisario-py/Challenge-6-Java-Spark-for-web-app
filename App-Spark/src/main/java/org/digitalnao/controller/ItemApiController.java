@@ -27,6 +27,29 @@ public class ItemApiController {
                 return gson.toJson(items);
             });
 
+        post("/items", (req, res) -> {
+            try {
+                Item item = gson.fromJson(req.body(), Item.class);
+
+                // Validación básica
+                var validationError = ItemValidator.validate(item);
+                if (validationError != null) {
+                    res.status(400);
+                    return gson.toJson(validationError);
+                }
+
+                // userId puede ser null
+                int generatedId = itemDao.insert(item);
+                item.setId(generatedId);
+
+                res.status(201);
+                return gson.toJson(new SuccessResponse("Item creado exitosamente"));
+            } catch (Exception e) {
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Error al procesar la solicitud: " + e.getMessage()));
+            }
+        });
+
             // Obtener item por ID
             get("/items/:id", (req, res) -> {
                 try {
@@ -76,43 +99,6 @@ public class ItemApiController {
                 }
             });
 
-            // Crear item para un usuario
-            post("/users/:userId/items", (req, res) -> {
-                try {
-                    int userId = Integer.parseInt(req.params(":userId"));
-
-                    // Verificar que el usuario existe
-                    User user = userDao.findById(userId);
-
-                    if (user == null) {
-                        res.status(404);
-                        return gson.toJson(new ErrorResponse("Usuario no encontrado"));
-                    }
-
-                    Item item = gson.fromJson(req.body(), Item.class);
-                    item.setUserId(userId);
-
-                    // Validación
-                    ErrorResponse validationError = ItemValidator.validate(item);
-                    if (validationError != null) {
-                        res.status(400);
-                        return gson.toJson(validationError);
-                    }
-
-                    int generatedId = itemDao.insert(item);
-                    item.setId(generatedId);
-
-                    res.status(201);
-                    return gson.toJson("Item created Successfully");
-
-                } catch (NumberFormatException e) {
-                    res.status(400);
-                    return gson.toJson(new ErrorResponse("ID de usuario inválido"));
-                } catch (Exception e) {
-                    res.status(400);
-                    return gson.toJson(new ErrorResponse("Error al procesar la solicitud: " + e.getMessage()));
-                }
-            });
 
             // Actualizar item
             put("/items/:id", (req, res) -> {
@@ -152,6 +138,38 @@ public class ItemApiController {
                     return gson.toJson(new ErrorResponse("Error al procesar la solicitud"));
                 }
             });
+
+        // Asignar o cambiar usuario a un item existente
+        put("/items/:id/user/:userId", (req, res) -> {
+            try {
+                int itemId = Integer.parseInt(req.params(":id"));
+                int userId = Integer.parseInt(req.params(":userId"));
+
+                Item item = itemDao.findById(itemId);
+                if (item == null) {
+                    res.status(404);
+                    return gson.toJson(new ErrorResponse("Item no encontrado"));
+                }
+
+                User user = userDao.findById(userId);
+                if (user == null) {
+                    res.status(404);
+                    return gson.toJson(new ErrorResponse("Usuario no encontrado"));
+                }
+
+                item.setUserId(userId);
+                itemDao.update(item);
+
+                return gson.toJson(new SuccessResponse("Usuario asignado correctamente al item"));
+
+            } catch (NumberFormatException e) {
+                res.status(400);
+                return gson.toJson(new ErrorResponse("ID inválido"));
+            } catch (Exception e) {
+                res.status(500);
+                return gson.toJson(new ErrorResponse("Error al asignar usuario al item"));
+            }
+        });
 
             // Eliminar item
             delete("/items/:id", (req, res) -> {
