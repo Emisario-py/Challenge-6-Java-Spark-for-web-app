@@ -33,10 +33,10 @@ public class UserApiController {
             dao.insert(user);
             res.status(201);
             if (user.getName() == null || user.getName().trim().isEmpty()) {
-                return new ErrorResponse("El nombre de usuario es requerido");
+                return new ErrorResponse("The user name is empty");
             }
             if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
-                return new ErrorResponse("El email del usuario es requerido");
+                return new ErrorResponse("The user email is empty");
             }
             return gson.toJson("User created");
         });

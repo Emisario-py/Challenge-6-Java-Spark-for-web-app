@@ -43,10 +43,10 @@ public class ItemApiController {
                 item.setId(generatedId);
 
                 res.status(201);
-                return gson.toJson(new SuccessResponse("Item creado exitosamente"));
+                return gson.toJson(new SuccessResponse("Item created successfully"));
             } catch (Exception e) {
                 res.status(400);
-                return gson.toJson(new ErrorResponse("Error al procesar la solicitud: " + e.getMessage()));
+                return gson.toJson(new ErrorResponse("Error in while processing the solicitude: " + e.getMessage()));
             }
         });
 
@@ -58,13 +58,13 @@ public class ItemApiController {
 
                     if (item == null) {
                         res.status(404);
-                        return gson.toJson(new ErrorResponse("Item no encontrado"));
+                        return gson.toJson(new ErrorResponse("Item not found"));
                     }
 
                     return gson.toJson(item);
                 } catch (NumberFormatException e) {
                     res.status(400);
-                    return gson.toJson(new ErrorResponse("ID inválido"));
+                    return gson.toJson(new ErrorResponse("Not a valid item id"));
                 }
             });
 
@@ -78,7 +78,7 @@ public class ItemApiController {
 
                     if (user == null) {
                         res.status(404);
-                        return gson.toJson(new ErrorResponse("Usuario no encontrado"));
+                        return gson.toJson(new ErrorResponse("Usuario not found"));
                     }
 
                     List<Item> items = itemDao.findByUserId(userId);
@@ -92,10 +92,10 @@ public class ItemApiController {
                     return gson.toJson(response);
                 } catch (NumberFormatException e) {
                     res.status(400);
-                    return gson.toJson(new ErrorResponse("ID de usuario inválido"));
+                    return gson.toJson(new ErrorResponse("Not a valid user id"));
                 } catch (Exception e) {
                     res.status(500);
-                    return gson.toJson(new ErrorResponse("Error al procesar la solicitud"));
+                    return gson.toJson(new ErrorResponse("Error while processing the solicitude"));
                 }
             });
 
@@ -108,7 +108,7 @@ public class ItemApiController {
 
                     if (existingItem == null) {
                         res.status(404);
-                        return gson.toJson(new ErrorResponse("Item no encontrado"));
+                        return gson.toJson(new ErrorResponse("Item not found"));
                     }
 
                     Item item = gson.fromJson(req.body(), Item.class);
@@ -118,7 +118,7 @@ public class ItemApiController {
                     User user = userDao.findById(item.getUserId());
                     if (user == null) {
                         res.status(400);
-                        return gson.toJson(new ErrorResponse("Usuario inválido"));
+                        return gson.toJson(new ErrorResponse("Not a valid user id"));
                     }
 
                     ErrorResponse validationError = ItemValidator.validate(item);
@@ -132,10 +132,10 @@ public class ItemApiController {
 
                 } catch (NumberFormatException e) {
                     res.status(400);
-                    return gson.toJson(new ErrorResponse("ID inválido"));
+                    return gson.toJson(new ErrorResponse("Not a valid item id"));
                 } catch (Exception e) {
                     res.status(400);
-                    return gson.toJson(new ErrorResponse("Error al procesar la solicitud"));
+                    return gson.toJson(new ErrorResponse("Error while processing the solicitude"));
                 }
             });
 
@@ -148,26 +148,26 @@ public class ItemApiController {
                 Item item = itemDao.findById(itemId);
                 if (item == null) {
                     res.status(404);
-                    return gson.toJson(new ErrorResponse("Item no encontrado"));
+                    return gson.toJson(new ErrorResponse("Item not found"));
                 }
 
                 User user = userDao.findById(userId);
                 if (user == null) {
                     res.status(404);
-                    return gson.toJson(new ErrorResponse("Usuario no encontrado"));
+                    return gson.toJson(new ErrorResponse("User not found"));
                 }
 
                 item.setUserId(userId);
                 itemDao.update(item);
 
-                return gson.toJson(new SuccessResponse("Usuario asignado correctamente al item"));
+                return gson.toJson(new SuccessResponse("User assigned successfully to the item"));
 
             } catch (NumberFormatException e) {
                 res.status(400);
-                return gson.toJson(new ErrorResponse("ID inválido"));
+                return gson.toJson(new ErrorResponse("Not a valid user id"));
             } catch (Exception e) {
                 res.status(500);
-                return gson.toJson(new ErrorResponse("Error al asignar usuario al item"));
+                return gson.toJson(new ErrorResponse("Error in the assignation of the user to the item"));
             }
         });
 
@@ -179,15 +179,15 @@ public class ItemApiController {
 
                     if (item == null) {
                         res.status(404);
-                        return gson.toJson(new ErrorResponse("Item no encontrado"));
+                        return gson.toJson(new ErrorResponse("Item not found"));
                     }
 
                     itemDao.delete(id);
-                    return gson.toJson(new SuccessResponse("Item eliminado exitosamente"));
+                    return gson.toJson(new SuccessResponse("Item deleted successfully"));
 
                 } catch (NumberFormatException e) {
                     res.status(400);
-                    return gson.toJson(new ErrorResponse("ID inválido"));
+                    return gson.toJson(new ErrorResponse("Not a valid item id"));
                 }
             });
 
@@ -199,15 +199,15 @@ public class ItemApiController {
                     User user = userDao.findById(userId);
                     if (user == null) {
                         res.status(404);
-                        return gson.toJson(new ErrorResponse("Usuario no encontrado"));
+                        return gson.toJson(new ErrorResponse("User not found"));
                     }
 
                     itemDao.deleteByUserId(userId);
-                    return gson.toJson(new SuccessResponse("Todos los items del usuario eliminados"));
+                    return gson.toJson(new SuccessResponse("All items of the user deleted successfully"));
 
                 } catch (NumberFormatException e) {
                     res.status(400);
-                    return gson.toJson(new ErrorResponse("ID de usuario inválido"));
+                    return gson.toJson(new ErrorResponse("Not a valid user id"));
                 }
             });
     }
