@@ -4,7 +4,6 @@ import org.digitalnao.model.User;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import java.util.List;
@@ -16,7 +15,7 @@ public interface UserDao {
     void createTable();
 
     @SqlUpdate("INSERT INTO users (name, email) VALUES (:name, :email)")
-    int insert(@BindBean User user);
+    void insert(@BindBean User user);
 
     @SqlQuery("SELECT * FROM users")
     List<User> getAll();

@@ -22,7 +22,7 @@ public class Main {
         userDao.createTable();
         itemDao.createTable();
 
-        DatabaseSeeder.run(jdbi, "src/main/resources/sql/seed-items.sql");
+        DatabaseSeeder.run(jdbi, "sql/seed-items.sql");
 
         UserApiController.initRoutes(userDao);
         ItemApiController.initRoutes(itemDao, userDao);

@@ -21,7 +21,6 @@ public class ItemApiController {
 
             before("/*", (req, res) -> res.type("application/json"));
 
-            // Obtener todos los items
             get("/items", (req, res) -> {
                 List<Item> items = itemDao.getAll();
                 return gson.toJson(items);
@@ -31,14 +30,12 @@ public class ItemApiController {
             try {
                 Item item = gson.fromJson(req.body(), Item.class);
 
-                // Validación básica
                 var validationError = ItemValidator.validate(item);
                 if (validationError != null) {
                     res.status(400);
                     return gson.toJson(validationError);
                 }
 
-                // userId puede ser null
                 int generatedId = itemDao.insert(item);
                 item.setId(generatedId);
 
@@ -50,7 +47,6 @@ public class ItemApiController {
             }
         });
 
-            // Obtener item por ID
             get("/items/:id", (req, res) -> {
                 try {
                     int id = Integer.parseInt(req.params(":id"));
@@ -68,12 +64,10 @@ public class ItemApiController {
                 }
             });
 
-            // Obtener todos los items de un usuario específico
             get("/users/:userId/items", (req, res) -> {
                 try {
                     int userId = Integer.parseInt(req.params(":userId"));
 
-                    // Verificar que el usuario existe
                     User user = userDao.findById(userId);
 
                     if (user == null) {
@@ -83,7 +77,6 @@ public class ItemApiController {
 
                     List<Item> items = itemDao.findByUserId(userId);
 
-                    // Crear respuesta con información del usuario e items
                     UserItemsResponse response = new UserItemsResponse();
                     response.setUser(user);
                     response.setItems(items);
@@ -100,7 +93,6 @@ public class ItemApiController {
             });
 
 
-            // Actualizar item
             put("/items/:id", (req, res) -> {
                 try {
                     int id = Integer.parseInt(req.params(":id"));
@@ -114,7 +106,6 @@ public class ItemApiController {
                     Item item = gson.fromJson(req.body(), Item.class);
                     item.setId(id);
 
-                    // Validar que el usuario existe
                     User user = userDao.findById(item.getUserId());
                     if (user == null) {
                         res.status(400);
@@ -139,7 +130,6 @@ public class ItemApiController {
                 }
             });
 
-        // Asignar o cambiar usuario a un item existente
         put("/items/:id/user/:userId", (req, res) -> {
             try {
                 int itemId = Integer.parseInt(req.params(":id"));
@@ -171,7 +161,6 @@ public class ItemApiController {
             }
         });
 
-            // Eliminar item
             delete("/items/:id", (req, res) -> {
                 try {
                     int id = Integer.parseInt(req.params(":id"));
@@ -191,7 +180,6 @@ public class ItemApiController {
                 }
             });
 
-            // Eliminar todos los items de un usuario
             delete("/users/:userId/items", (req, res) -> {
                 try {
                     int userId = Integer.parseInt(req.params(":userId"));
