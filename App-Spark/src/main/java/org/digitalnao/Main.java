@@ -4,6 +4,7 @@ import org.digitalnao.controller.ItemApiController;
 import org.digitalnao.controller.UserApiController;
 import org.digitalnao.dao.ItemDao;
 import org.digitalnao.dao.UserDao;
+import org.digitalnao.util.DatabaseSeeder;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import static spark.Spark.*;
@@ -20,6 +21,8 @@ public class Main {
 
         userDao.createTable();
         itemDao.createTable();
+
+        DatabaseSeeder.run(jdbi, "src/main/resources/sql/seed-items.sql");
 
         UserApiController.initRoutes(userDao);
         ItemApiController.initRoutes(itemDao, userDao);
