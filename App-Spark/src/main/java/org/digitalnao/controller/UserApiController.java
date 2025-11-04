@@ -3,6 +3,8 @@ package org.digitalnao.controller;
 import org.digitalnao.dao.UserDao;
 import org.digitalnao.model.User;
 import com.google.gson.Gson;
+import org.digitalnao.model.error.ErrorResponse;
+
 import static spark.Spark.*;
 
 public class UserApiController {
@@ -30,8 +32,13 @@ public class UserApiController {
             User user = gson.fromJson(req.body(), User.class);
             dao.insert(user);
             res.status(201);
+            if (user.getName() == null || user.getName().trim().isEmpty()) {
+                return new ErrorResponse("El nombre de usuario es requerido");
+            }
+            if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+                return new ErrorResponse("El email del usuario es requerido");
+            }
             return gson.toJson("User created");
-
         });
 
         put("/users/:id", (req, res) -> {
