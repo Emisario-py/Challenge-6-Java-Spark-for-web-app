@@ -20,7 +20,6 @@ public class DatabaseSeeder {
      */
     public static void run(Jdbi jdbi, String resourcePath) {
         try {
-            // Load the SQL file from resources
             InputStream inputStream = DatabaseSeeder.class
                     .getClassLoader()
                     .getResourceAsStream(resourcePath);
@@ -29,16 +28,13 @@ public class DatabaseSeeder {
                 throw new RuntimeException("SQL file not found in classpath: " + resourcePath);
             }
 
-            // Read file content
             String sql = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8).trim();
 
-            // Basic security check to prevent dangerous commands
             String upperSql = sql.toUpperCase();
             if (upperSql.contains("DROP ") || upperSql.contains("ALTER ")) {
                 throw new SecurityException("The script contains potentially unsafe commands: " + resourcePath);
             }
 
-            // Execute the script with JDBI
             jdbi.useHandle(handle -> handle.createScript(sql).execute());
 
             System.out.println("✅ SQL script executed successfully: " + resourcePath);
