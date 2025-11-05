@@ -2,8 +2,10 @@ package org.digitalnao.controller;
 
 import org.digitalnao.dao.ItemDao;
 import org.digitalnao.dao.UserDao;
+import org.digitalnao.dao.OfferDao;
 import org.digitalnao.model.Item;
 import org.digitalnao.model.User;
+import org.digitalnao.model.Offer;
 import org.digitalnao.model.error.ErrorResponse;
 import org.digitalnao.model.error.SuccessResponse;
 import org.digitalnao.model.error.UserItemsResponse;
@@ -16,16 +18,24 @@ import static spark.Spark.*;
 public class ItemApiController {
     private static final Gson gson = new Gson();
 
-    public static void initRoutes(ItemDao itemDao, UserDao userDao) {
+    public static void initRoutes(ItemDao itemDao, UserDao userDao, OfferDao offerDao) {
 
+        before("/*", (req, res) -> res.type("application/json"));
 
-            before("/*", (req, res) -> res.type("application/json"));
+        //  Get all items (with offers)
+        get("/items", (req, res) -> {
+            List<Item> items = itemDao.getAll();
 
-            get("/items", (req, res) -> {
-                List<Item> items = itemDao.getAll();
-                return gson.toJson(items);
-            });
+            // For each item, include its offers
+            for (Item item : items) {
+                List<Offer> offers = offerDao.findByItemId(item.getId());
+                item.setOffers(offers);
+            }
 
+            return gson.toJson(items);
+        });
+
+        //  Create new item
         post("/items", (req, res) -> {
             try {
                 Item item = gson.fromJson(req.body(), Item.class);
@@ -43,93 +53,103 @@ public class ItemApiController {
                 return gson.toJson(new SuccessResponse("Item created successfully"));
             } catch (Exception e) {
                 res.status(400);
-                return gson.toJson(new ErrorResponse("Error in while processing the solicitude: " + e.getMessage()));
+                return gson.toJson(new ErrorResponse("Error while processing the request: " + e.getMessage()));
             }
         });
 
-            get("/items/:id", (req, res) -> {
-                try {
-                    int id = Integer.parseInt(req.params(":id"));
-                    Item item = itemDao.findById(id);
+        //  Get item by id (with offers)
+        get("/items/:id", (req, res) -> {
+            try {
+                int id = Integer.parseInt(req.params(":id"));
+                Item item = itemDao.findById(id);
 
-                    if (item == null) {
-                        res.status(404);
-                        return gson.toJson(new ErrorResponse("Item not found"));
-                    }
-
-                    return gson.toJson(item);
-                } catch (NumberFormatException e) {
-                    res.status(400);
-                    return gson.toJson(new ErrorResponse("Not a valid item id"));
+                if (item == null) {
+                    res.status(404);
+                    return gson.toJson(new ErrorResponse("Item not found"));
                 }
-            });
 
-            get("/users/:userId/items", (req, res) -> {
-                try {
-                    int userId = Integer.parseInt(req.params(":userId"));
+                List<Offer> offers = offerDao.findByItemId(id);
+                item.setOffers(offers);
 
-                    User user = userDao.findById(userId);
+                return gson.toJson(item);
+            } catch (NumberFormatException e) {
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Not a valid item id"));
+            }
+        });
 
-                    if (user == null) {
-                        res.status(404);
-                        return gson.toJson(new ErrorResponse("Usuario not found"));
-                    }
+        // Get items by user (with offers)
+        get("/users/:userId/items", (req, res) -> {
+            try {
+                int userId = Integer.parseInt(req.params(":userId"));
+                User user = userDao.findById(userId);
 
-                    List<Item> items = itemDao.findByUserId(userId);
+                if (user == null) {
+                    res.status(404);
+                    return gson.toJson(new ErrorResponse("User not found"));
+                }
 
-                    UserItemsResponse response = new UserItemsResponse();
-                    response.setUser(user);
-                    response.setItems(items);
-                    response.setTotalItems(items.size());
+                List<Item> items = itemDao.findByUserId(userId);
 
-                    return gson.toJson(response);
-                } catch (NumberFormatException e) {
+                for (Item item : items) {
+                    List<Offer> offers = offerDao.findByItemId(item.getId());
+                    item.setOffers(offers);
+                }
+
+                UserItemsResponse response = new UserItemsResponse();
+                response.setUser(user);
+                response.setItems(items);
+                response.setTotalItems(items.size());
+
+                return gson.toJson(response);
+            } catch (NumberFormatException e) {
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Not a valid user id"));
+            } catch (Exception e) {
+                res.status(500);
+                return gson.toJson(new ErrorResponse("Error while processing the request"));
+            }
+        });
+
+        // Update item
+        put("/items/:id", (req, res) -> {
+            try {
+                int id = Integer.parseInt(req.params(":id"));
+                Item existingItem = itemDao.findById(id);
+
+                if (existingItem == null) {
+                    res.status(404);
+                    return gson.toJson(new ErrorResponse("Item not found"));
+                }
+
+                Item item = gson.fromJson(req.body(), Item.class);
+                item.setId(id);
+
+                User user = userDao.findById(item.getUserId());
+                if (user == null) {
                     res.status(400);
                     return gson.toJson(new ErrorResponse("Not a valid user id"));
-                } catch (Exception e) {
-                    res.status(500);
-                    return gson.toJson(new ErrorResponse("Error while processing the solicitude"));
                 }
-            });
 
-
-            put("/items/:id", (req, res) -> {
-                try {
-                    int id = Integer.parseInt(req.params(":id"));
-                    Item existingItem = itemDao.findById(id);
-
-                    if (existingItem == null) {
-                        res.status(404);
-                        return gson.toJson(new ErrorResponse("Item not found"));
-                    }
-
-                    Item item = gson.fromJson(req.body(), Item.class);
-                    item.setId(id);
-
-                    User user = userDao.findById(item.getUserId());
-                    if (user == null) {
-                        res.status(400);
-                        return gson.toJson(new ErrorResponse("Not a valid user id"));
-                    }
-
-                    ErrorResponse validationError = ItemValidator.validate(item);
-                    if (validationError != null) {
-                        res.status(400);
-                        return gson.toJson(validationError);
-                    }
-
-                    itemDao.update(item);
-                    return gson.toJson(item);
-
-                } catch (NumberFormatException e) {
+                ErrorResponse validationError = ItemValidator.validate(item);
+                if (validationError != null) {
                     res.status(400);
-                    return gson.toJson(new ErrorResponse("Not a valid item id"));
-                } catch (Exception e) {
-                    res.status(400);
-                    return gson.toJson(new ErrorResponse("Error while processing the solicitude"));
+                    return gson.toJson(validationError);
                 }
-            });
 
+                itemDao.update(item);
+                return gson.toJson(item);
+
+            } catch (NumberFormatException e) {
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Not a valid item id"));
+            } catch (Exception e) {
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Error while processing the request"));
+            }
+        });
+
+        // Assign user to item
         put("/items/:id/user/:userId", (req, res) -> {
             try {
                 int itemId = Integer.parseInt(req.params(":id"));
@@ -151,54 +171,51 @@ public class ItemApiController {
                 itemDao.update(item);
 
                 return gson.toJson(new SuccessResponse("User assigned successfully to the item"));
-
             } catch (NumberFormatException e) {
                 res.status(400);
                 return gson.toJson(new ErrorResponse("Not a valid user id"));
             } catch (Exception e) {
                 res.status(500);
-                return gson.toJson(new ErrorResponse("Error in the assignation of the user to the item"));
+                return gson.toJson(new ErrorResponse("Error while assigning user to the item"));
             }
         });
 
-            delete("/items/:id", (req, res) -> {
-                try {
-                    int id = Integer.parseInt(req.params(":id"));
-                    Item item = itemDao.findById(id);
+        // Delete item by id
+        delete("/items/:id", (req, res) -> {
+            try {
+                int id = Integer.parseInt(req.params(":id"));
+                Item item = itemDao.findById(id);
 
-                    if (item == null) {
-                        res.status(404);
-                        return gson.toJson(new ErrorResponse("Item not found"));
-                    }
-
-                    itemDao.delete(id);
-                    return gson.toJson(new SuccessResponse("Item deleted successfully"));
-
-                } catch (NumberFormatException e) {
-                    res.status(400);
-                    return gson.toJson(new ErrorResponse("Not a valid item id"));
+                if (item == null) {
+                    res.status(404);
+                    return gson.toJson(new ErrorResponse("Item not found"));
                 }
-            });
 
-            delete("/users/:userId/items", (req, res) -> {
-                try {
-                    int userId = Integer.parseInt(req.params(":userId"));
+                itemDao.delete(id);
+                return gson.toJson(new SuccessResponse("Item deleted successfully"));
+            } catch (NumberFormatException e) {
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Not a valid item id"));
+            }
+        });
 
-                    User user = userDao.findById(userId);
-                    if (user == null) {
-                        res.status(404);
-                        return gson.toJson(new ErrorResponse("User not found"));
-                    }
+        // Delete all items by user
+        delete("/users/:userId/items", (req, res) -> {
+            try {
+                int userId = Integer.parseInt(req.params(":userId"));
+                User user = userDao.findById(userId);
 
-                    itemDao.deleteByUserId(userId);
-                    return gson.toJson(new SuccessResponse("All items of the user deleted successfully"));
-
-                } catch (NumberFormatException e) {
-                    res.status(400);
-                    return gson.toJson(new ErrorResponse("Not a valid user id"));
+                if (user == null) {
+                    res.status(404);
+                    return gson.toJson(new ErrorResponse("User not found"));
                 }
-            });
+
+                itemDao.deleteByUserId(userId);
+                return gson.toJson(new SuccessResponse("All items of the user deleted successfully"));
+            } catch (NumberFormatException e) {
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Not a valid user id"));
+            }
+        });
     }
-
-
 }

@@ -28,6 +28,6 @@ public class ItemValidator {
             return new ErrorResponse("La descripción del item es requerida");
         }
 
-        return null; // ✅ Si todo está correcto
+        return null;
     }
 }
