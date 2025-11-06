@@ -10,5 +10,7 @@ public class Item {
     private Integer userId;
     private String name;
     private String description;
+    private double initialPrice;
+    private double highestOffer;
     private List<Offer> offers;
 }

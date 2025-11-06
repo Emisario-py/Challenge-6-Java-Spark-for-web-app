@@ -1,5 +1,6 @@
 package org.digitalnao;
 
+import org.digitalnao.controller.AuctionViewController;
 import org.digitalnao.controller.ItemApiController;
 import org.digitalnao.controller.OfferApiController;
 import org.digitalnao.controller.UserApiController;
@@ -28,12 +29,13 @@ public class Main {
 
         DatabaseSeeder.run(jdbi, "sql/seed-items.sql");
 
+        AuctionViewController.initRoutes(userDao, itemDao, offerDao);
         UserApiController.initRoutes(userDao, offerDao);
         ItemApiController.initRoutes(itemDao, userDao, offerDao);
         OfferApiController.initRoutes(offerDao, userDao, itemDao);
 
         System.out.println("🚀 Server running on http://localhost:8080");
-        System.out.println("🔌 API REST: http://localhost:8080/api/users");
+        System.out.println("🔌 API REST: http://localhost:8080/users");
 
     }
 }

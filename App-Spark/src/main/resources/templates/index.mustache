@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subastas</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header class="topbar">
+    <h1>Subastas</h1>
+</header>
+
+<main class="container">
+    <section class="card">
+        <h2>Seleccionar perfil</h2>
+        <form action="/profiles" method="post" class="row gap">
+            <div class="field">
+                <label>Nombre</label>
+                <input name="name" required>
+            </div>
+            <div class="field">
+                <label>Email</label>
+                <input name="email" type="email" required>
+            </div>
+            <button type="submit">Crear y entrar</button>
+        </form>
+
+        <h3>O ingresar con un usuario existente</h3>
+        <ul class="list">
+            {{#users}}
+                <li><a class="button" href="/users/{{id}}">{{name}} ({{email}})</a></li>
+            {{/users}}
+            {{^users}}<li>No hay usuarios aún.</li>{{/users}}
+        </ul>
+    </section>
+</main>
+</body>
+</html>
