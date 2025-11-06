@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - {{user.name}}</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar-content">
+        <h1>Dashboard de Subastas</h1>
+        <div class="user-info">
+            <span>Bienvenido, <strong>{{user.name}}</strong></span>
+            <a href="/" class="button-small">Salir</a>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    {{#success}}
+        <div class="alert alert-success">{{success}}</div>
+    {{/success}}
+    {{#error}}
+        <div class="alert alert-error">{{error}}</div>
+    {{/error}}
+
+    <section class="grid-2">
+        <div class="card">
+            <h2>Ítems disponibles</h2>
+            <ul class="list">
+                {{#items}}
+                    <li>
+                        <div class="item-row">
+                            <div class="item-info">
+                                <strong class="item-name">{{name}}</strong>
+                                <small class="item-price">Precio inicial: ${{initialPrice}}</small>
+                                <small class="item-price">
+                                    {{#highestOffer}}Oferta más alta actual: ${{highestOffer}}{{/highestOffer}}
+                                    {{^highestOffer}}Sin ofertas aún (precio inicial: ${{initialPrice}}){{/highestOffer}}
+                                </small>
+                            </div>
+                            <a class="button button-primary" href="/items/{{id}}?userId={{user.id}}">Ver y ofertar</a>
+                        </div>
+                    </li>
+                {{/items}}
+                {{^items}}
+                    <li class="empty-state">No hay ítems publicados.</li>
+                {{/items}}
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Mis últimas ofertas</h2>
+            <ul class="list">
+                {{#myOffers}}
+                    <li>
+                        <div class="item-row">
+                            <div class="item-info">
+                                <strong class="item-name">Item: {{itemName}}</strong>
+                                <small class="item-price">Oferta: ${{amount}}</small>
+                                <small class="item-price">Fecha: {{formattedDate}}</small>
+                                <small class="item-status">{{status}}</small>
+                            </div>
+                            <a class="button button-ghost" href="/users/{{user.id}}/offers">Ver detalles</a>
+                        </div>
+                    </li>
+                {{/myOffers}}
+                {{^myOffers}}
+                    <li class="empty-state">Todavía no has ofertado.</li>
+                {{/myOffers}}
+            </ul>
+        </div>
+    </section>
+</main>
+</body>
+</html>
