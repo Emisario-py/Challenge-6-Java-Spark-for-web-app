@@ -28,9 +28,21 @@
     <section class="grid-2">
         <div class="card">
             <h2>Ítems disponibles</h2>
-            <ul class="list">
+
+            <!-- Buscador -->
+            <div class="search-container">
+                <input
+                        type="text"
+                        id="searchInput"
+                        class="search-input"
+                        placeholder="🔍 Buscar por nombre o precio..."
+                        autocomplete="off"
+                >
+            </div>
+
+            <ul class="list" id="itemsList">
                 {{#items}}
-                    <li>
+                    <li class="item-element" data-name="{{name}}" data-price="{{initialPrice}}" data-highest="{{highestOffer}}">
                         <div class="item-row">
                             <div class="item-info">
                                 <strong class="item-name">{{name}}</strong>
@@ -48,6 +60,9 @@
                     <li class="empty-state">No hay ítems publicados.</li>
                 {{/items}}
             </ul>
+            <div id="noResults" class="no-results" style="display: none;">
+                No se encontraron ítems que coincidan con tu búsqueda.
+            </div>
         </div>
 
         <div class="card">
@@ -73,5 +88,7 @@
         </div>
     </section>
 </main>
+
+<script src="/js/searcher.js"></script>
 </body>
 </html>
