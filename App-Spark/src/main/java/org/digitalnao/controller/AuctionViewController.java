@@ -204,6 +204,13 @@ public class AuctionViewController {
                 offer.setCreateAt(new Date());
                 offerDao.insert(offer);
 
+                OfferWebSocket.notifyNewOffer(
+                        itemId,
+                        userId,
+                        amount,
+                        user.getName()
+                );
+
                 res.redirect("/items/" + itemId + "?userId=" + userId +
                         "&success=Offer+placed");
                 return null;
