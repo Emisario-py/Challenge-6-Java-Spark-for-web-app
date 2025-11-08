@@ -10,7 +10,7 @@ public class Offer {
     private int userId;
     private int itemId;
     private String itemName;
-    private String UserName;
+    private String userName;
     private Date createAt;
     private String formattedDate;
     private String status;
