@@ -645,6 +645,77 @@ button[type="submit"]:active {
     border-top: 2px solid #e2e8f0;
 }
 
+/* Notification (estilo coherente con el resto del sistema) */
+.notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 9999;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Estado visible */
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Variantes opcionales */
+.notification.success {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    box-shadow: 0 8px 24px rgba(72, 187, 120, 0.4);
+}
+
+.notification.error {
+    background: linear-gradient(135deg, #dc3545 0%, #b91c1c 100%);
+    box-shadow: 0 8px 24px rgba(220, 53, 69, 0.4);
+}
+
+.notification.info {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    box-shadow: 0 8px 24px rgba(49, 130, 206, 0.4);
+}
+.search-container {
+    margin-bottom: 1.5rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+.no-results {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .grid-2 {
@@ -732,4 +803,6 @@ button[type="submit"]:active {
     .field {
         min-width: 100%;
     }
+
+
 }

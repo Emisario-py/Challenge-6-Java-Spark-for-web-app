@@ -1,9 +1,6 @@
 package org.digitalnao;
 
-import org.digitalnao.controller.AuctionViewController;
-import org.digitalnao.controller.ItemApiController;
-import org.digitalnao.controller.OfferApiController;
-import org.digitalnao.controller.UserApiController;
+import org.digitalnao.controller.*;
 import org.digitalnao.dao.ItemDao;
 import org.digitalnao.dao.OfferDao;
 import org.digitalnao.dao.UserDao;
@@ -15,7 +12,7 @@ import static spark.Spark.*;
 public class Main {
     public static void main(String[] args) {
         port(8080);
-
+        webSocket("/auction-updates", OfferWebSocket.class);
         Jdbi jdbi = Jdbi.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "sa", "");
         jdbi.installPlugin(new SqlObjectPlugin());
 
@@ -34,8 +31,9 @@ public class Main {
         ItemApiController.initRoutes(itemDao, userDao, offerDao);
         OfferApiController.initRoutes(offerDao, userDao, itemDao);
 
-        System.out.println("🚀 Server running on http://localhost:8080");
-        System.out.println("🔌 API REST: http://localhost:8080/users");
+        System.out.println("WebSocket activo en ws://localhost:8080/ws/offers");
+        System.out.println("Server running on http://localhost:8080");
+        System.out.println("API REST: http://localhost:8080/users");
 
     }
 }
