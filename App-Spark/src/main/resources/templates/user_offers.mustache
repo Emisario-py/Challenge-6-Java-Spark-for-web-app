@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Ofertas - {{user.name}}</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar-content">
+        <h1>Mis Ofertas</h1>
+        <div class="user-info">
+            <span>Usuario: <strong>{{user.name}}</strong></span>
+            <a href="/users/{{user.id}}" class="button-small">Dashboard</a>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    {{#success}}
+        <div class="alert alert-success">{{success}}</div>
+    {{/success}}
+    {{#error}}
+        <div class="alert alert-error">{{error}}</div>
+    {{/error}}
+
+    <section class="card offers-card">
+        <div class="card-header">
+            <h2>Historial de ofertas</h2>
+            <span class="offers-count">{{offers.size}} ofertas realizadas</span>
+        </div>
+
+        <ul class="list">
+            {{#offers}}
+                <li>
+                    <div class="item-row">
+                        <div class="item-info">
+                            <strong class="item-name">Item: {{itemName}}</strong>
+                            <small class="item-price">Mi oferta: ${{amount}}</small>
+                            <small class="item-date">{{timestamp}}</small>
+                        </div>
+                        <a class="button button-primary" href="/items/{{itemId}}?userId={{user.id}}">Ver ítem</a>
+                    </div>
+                </li>
+            {{/offers}}
+            {{^offers}}
+                <li class="empty-state">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <p>Sin ofertas registradas.</p>
+                    <p class="empty-hint">Empieza a ofertar en los ítems disponibles</p>
+                </li>
+            {{/offers}}
+        </ul>
+
+        <div class="card-actions">
+            <a class="button button-ghost" href="/users/{{user.id}}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Volver al Dashboard
+            </a>
+            <a class="button button-secondary" href="/">Cambiar usuario</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>
