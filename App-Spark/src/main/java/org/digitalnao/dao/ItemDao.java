@@ -12,10 +12,10 @@ import java.util.List;
 @RegisterBeanMapper(Item.class)
 public interface ItemDao {
 
-    @SqlUpdate("CREATE TABLE IF NOT EXISTS items (id IDENTITY PRIMARY KEY, user_id INT NULL, name VARCHAR(100), description VARCHAR(255), initial_price double not null)")
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS items (id IDENTITY PRIMARY KEY, user_id INT NULL, name VARCHAR(100), description VARCHAR(255), initialPrice double not null)")
     void createTable();
 
-    @SqlUpdate("INSERT INTO items (user_id, name, description, initial_price) VALUES (:userId, :name, :description)")
+    @SqlUpdate("INSERT INTO items (user_id, name, description, initialPrice) VALUES (:userId, :name, :description)")
     @GetGeneratedKeys
     int insert(@BindBean Item item);
 
@@ -28,7 +28,7 @@ public interface ItemDao {
     @SqlQuery("SELECT * FROM items WHERE user_id = :userId")
     List<Item> findByUserId(@Bind("userId") int userId);
 
-    @SqlUpdate("UPDATE items SET user_id = :userId, name = :name, description = :description, initial_price = :initial_price")
+    @SqlUpdate("UPDATE items SET user_id = :userId, name = :name, description = :description, initialPrice = :initialPrice")
     void update(@BindBean Item item);
 
     @SqlUpdate("DELETE FROM items WHERE id = :id")

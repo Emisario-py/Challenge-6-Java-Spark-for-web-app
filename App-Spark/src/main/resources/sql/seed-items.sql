@@ -8,7 +8,7 @@
 DELETE FROM items;
 
 -- Inserta ítems base sin usuario asignado
-INSERT INTO items (name, description, user_id, initial_price) VALUES
+INSERT INTO items (name, description, user_id, initialPrice) VALUES
                                                    ('Laptop Dell XPS 13', 'Ultrabook de 13 pulgadas con pantalla táctil', NULL, 100 ),
                                                    ('Teclado Mecánico RGB', 'Teclado con switches rojos y retroiluminación', NULL, 100),
                                                    ('Mouse Inalámbrico Logitech', 'Mouse ergonómico con conexión Bluetooth', NULL, 100),
