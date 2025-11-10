@@ -33,7 +33,7 @@ public class Main {
 
         System.out.println("WebSocket activo en ws://localhost:8080/ws/offers");
         System.out.println("Server running on http://localhost:8080");
-        System.out.println("API REST: http://localhost:8080/users");
+        System.out.println("API REST: http://localhost:8080/api");
 
     }
 }
