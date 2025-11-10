@@ -48,28 +48,28 @@ All backend routes, validation, and data access operations are implemented using
 ## 🧾 API Endpoints
 
 ### 👤 User Routes
-| Method   | Endpoint | Description        |
-|----------|----------|--------------------|
-| `GET`    | `/users` | Retrieve all users |
-| `POST`   | `/users` | Create a new user  |
-| `PUT`    | `/users/:id` | Update user by ID  |
-| `DELETE` | `/users/:id` | Delete user by ID  |
+| Method   | Endpoint        | Description        |
+|----------|-----------------|--------------------|
+| `GET`    | `apiapi/users`  | Retrieve all users |
+| `POST`   | `api/users`     | Create a new user  |
+| `PUT`    | `api/users/:id` | Update user by ID  |
+| `DELETE` | `api/users/:id` | Delete user by ID  |
 
 ### 📦 Item Routes
-| Method   | Endpoint     | Description                |
-|----------|--------------|----------------------------|
-| `GET`    | `/items`     | Retrieve all items         |
-| `POST`   | `/items`     | Add a new collectible item |
-| `PUT`    | `/items/:id` | Update item information    |
-| `DELETE` | `/items/:id` | Remove item by ID          |
+| Method   | Endpoint        | Description                |
+|----------|-----------------|----------------------------|
+| `GET`    | `api/items`     | Retrieve all items         |
+| `POST`   | `api/items`     | Add a new collectible item |
+| `PUT`    | `api/items/:id` | Update item information    |
+| `DELETE` | `api/items/:id` | Remove item by ID          |
 
 ### 💰 Offer Routes
-| Method   | Endpoint      | Description          |
-|----------|---------------|----------------------|
-| `GET`    | `/offers`     | Retrieve all offers  |
-| `POST`   | `/offers`     | Submit a new offer   |
-| `PUT`    | `/offers/:id` | Update offer details |
-| `DELETE` | `/offers/:id` | Delete offer by ID   |
+| Method   | Endpoint         | Description          |
+|----------|------------------|----------------------|
+| `GET`    | `api/offers`     | Retrieve all offers  |
+| `POST`   | `api/offers`     | Submit a new offer   |
+| `PUT`    | `api/offers/:id` | Update offer details |
+| `DELETE` | `api/offers/:id` | Delete offer by ID   |
 
 ### 🔄 WebSocket
 | Event     | Description                                                             |
