@@ -25,9 +25,6 @@ public interface ItemDao {
     @SqlQuery("SELECT * FROM items WHERE id = :id")
     Item findById(@Bind("id") int id);
 
-    @SqlQuery("SELECT * FROM items WHERE user_id = :userId")
-    List<Item> findByUserId(@Bind("userId") int userId);
-
     @SqlUpdate("UPDATE items SET name = :name, description = :description, initialPrice = :initialPrice WHERE id = :id")
     void update(@BindBean Item item);
 
