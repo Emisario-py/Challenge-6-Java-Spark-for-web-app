@@ -15,7 +15,7 @@ public interface ItemDao {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS items (id IDENTITY PRIMARY KEY, user_id INT NULL, name VARCHAR(100), description VARCHAR(255), initialPrice double not null)")
     void createTable();
 
-    @SqlUpdate("INSERT INTO items (user_id, name, description, initialPrice) VALUES (:userId, :name, :description)")
+    @SqlUpdate("INSERT INTO items (user_id, name, description, initialPrice) VALUES (:userId, :name, :description, :initialPrice)")
     @GetGeneratedKeys
     int insert(@BindBean Item item);
 
