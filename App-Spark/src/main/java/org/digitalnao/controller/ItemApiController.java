@@ -78,39 +78,6 @@ public class ItemApiController {
                 }
             });
 
-            // Get items by user (with offers)
-            get("/users/:userId/items", (req, res) -> {
-                try {
-                    int userId = Integer.parseInt(req.params(":userId"));
-                    User user = userDao.findById(userId);
-
-                    if (user == null) {
-                        res.status(404);
-                        return gson.toJson(new ErrorResponse("User not found"));
-                    }
-
-                    List<Item> items = itemDao.findByUserId(userId);
-
-                    for (Item item : items) {
-                        List<Offer> offers = offerDao.findByItemId(item.getId());
-                        item.setOffers(offers);
-                    }
-
-                    UserItemsResponse response = new UserItemsResponse();
-                    response.setUser(user);
-                    response.setItems(items);
-                    response.setTotalItems(items.size());
-
-                    return gson.toJson(response);
-                } catch (NumberFormatException e) {
-                    res.status(400);
-                    return gson.toJson(new ErrorResponse("Not a valid user id"));
-                } catch (Exception e) {
-                    res.status(500);
-                    return gson.toJson(new ErrorResponse("Error while processing the request"));
-                }
-            });
-
             // Update item
             put("/items/:id", (req, res) -> {
                 try {
@@ -125,11 +92,6 @@ public class ItemApiController {
                     Item item = gson.fromJson(req.body(), Item.class);
                     item.setId(id);
 
-                    User user = userDao.findById(item.getUserId());
-                    if (user == null) {
-                        res.status(400);
-                        return gson.toJson(new ErrorResponse("Not a valid user id"));
-                    }
 
                     ErrorResponse validationError = ItemValidator.validate(item);
                     if (validationError != null) {
